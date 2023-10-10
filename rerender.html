@@ -1,0 +1,54 @@
+<html lang="en">
+  <head>
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    /> -->
+    <link rel="stylesheet" href="./style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div class="container"></div>
+    <script>
+      const todo = [];
+
+      window.onload = () => {
+        render_todo();
+      };
+
+      function render_todo() {
+        const container = document.querySelector(".container");
+
+        container.innerHTML = `
+        <div class="input-wrapper">
+            <input type="text" id="todo-input" placeholder="할 일" />
+            <button onclick="add_todo()">add</button>
+        </div>
+
+        <div id="todo-list">
+            
+            ${todo
+              .map((data) => {
+                return `<div>
+                        <input type="checkbox"/>
+                        <label>${data}</label>
+                    </div>`;
+              })
+              .join("")}
+        </div>
+        `;
+      }
+
+      function add_todo() {
+        const inputText = document.querySelector("#todo-input").value;
+        todo.push(inputText);
+        render_todo();
+      }
+    </script>
+  </body>
+</html>
