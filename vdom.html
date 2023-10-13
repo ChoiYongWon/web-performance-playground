@@ -1,0 +1,128 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div id="root">
+
+    </div>
+
+    <script>
+
+        const todo = ['hello']
+
+        function updateElement (parent, newNode, oldNode, index = 0) {
+          if (!newNode && oldNode) return parent.removeChild(parent.childNode[index]);
+          if (newNode && !oldNode) return parent.appendChild(createElement(newNode));
+          if (typeof newNode === "string" && typeof oldNode === "string") {
+            if (newNode === oldNode) return;
+            return parent.replaceChild(
+              createElement(newNode),
+              parent.childNodes[index]
+            )
+          }
+          if (newNode.type !== oldNode.type) {
+            return parent.replaceChild(
+              createElement(newNode),
+              parent.childNodes[index]
+            )
+          }
+
+          updateAttributes(
+            parent.childNodes[index],
+            newNode.props || {},
+            oldNode.props || {},
+          );
+          
+          const maxLength = Math.max(newNode.children.length, oldNode.children.length);
+          
+          for (let i = 0; i < maxLength; i++) {
+            updateElement(
+              parent.childNodes[index],
+              newNode.children[i],
+              oldNode.children[i],
+              i
+            )
+          }
+        }
+
+        function updateAttributes(target, newProps, oldProps) {
+          for (const [attr, value] of Object.entries(newProps)) {
+            if (oldProps[attr] === newProps[attr]) continue;
+            target.setAttribute(attr, value);
+          }
+
+          for (const attr of Object.keys(oldProps)) {
+            if (newProps[attr] !== undefined) continue;
+            target.removeAttribute(attr)
+          }
+        }
+
+        function createElement (node) {
+          if (typeof node === 'string') {
+            return document.createTextNode(node);
+          }
+
+          const $el = document.createElement(node.type);
+
+          Object.entries(node.props || {})
+                .filter(([attr, value]) => value)
+                .forEach(([attr, value]) => (
+                  $el.setAttribute(attr, value)
+                ));
+
+          try {
+            node.children
+                .map(createElement)
+                .forEach(child => $el.appendChild(child));
+          } catch (e) {
+            console.log(node);
+            console.error(e);
+          }
+
+          return $el;
+        }
+
+        function h(type, props, ...children) {
+          return { type, props, children: children.flat() }
+        }
+
+
+        const render = (state) => {
+          // console.log(state)
+          return h('div', { class: 'container' }, 
+            h('div', { class: 'input-wrapper' },
+              h('input', { type: 'text', id: 'todo-input', placeholder: '할 일' }),
+              h('button', { onclick: 'add_todo()'}, 'add'),
+            ),
+            h('div', { id: 'todo-list'}, 
+              state.map((data) => {
+                return h('div', null, 
+                  h('input', {type: 'checkbox'}),
+                  h('label', null, data)
+                )
+              })
+            ),
+          )
+        }
+
+        const $root = document.body.querySelector('#root');
+        $root.appendChild(createElement(render(todo)));
+        // updateElement($root, render(todo));
+        
+        
+        function add_todo() {
+          const inputText = document.querySelector("#todo-input").value;
+          // todo.push(inputText);
+          updateElement($root, render([...todo, inputText]), render([...todo]));
+        }
+        
+
+
+    </script>
+</body>
+</html>
