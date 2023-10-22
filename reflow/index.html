@@ -1,0 +1,39 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            width: 20%;
+            height: 100px;
+            border: solid 2px red;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+        }
+
+        .image {
+            width: 30%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">박스</div>
+    <img class="image" src="../crp/image.jpg" alt="">
+    <script>
+        const color = ['red', 'blue']
+        let i = 0;
+        window.onload = () => {
+            setInterval(()=>{
+                document.querySelector(".container").style.borderColor = color[i]
+                if(i == 0) i = 1;
+                else i = 0;
+            }, 100)
+            
+        }
+    </script>
+</body>
+</html>

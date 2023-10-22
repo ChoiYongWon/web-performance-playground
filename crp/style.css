@@ -1,0 +1,9 @@
+body { font-size: 16px; }
+
+header { font-weight: bold; }
+h1 { font-size: 24px; }
+
+main { color: gray; }
+h2 { font-size: 20px; }
+
+footer { display: none; }
